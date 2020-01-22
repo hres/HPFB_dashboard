@@ -55,7 +55,10 @@ shinyServer(function(input, output) {
       
       if(input$selectdir=='MHPD'){
          
-         output<-DT::datatable(table,rownames=FALSE)%>%
+         output<-DT::datatable(table,
+             options = list(autoWidth=TRUE,
+                            columnDefs = list(list(targets = 0, visible = FALSE),
+                                              list(targets=1,width='250px'))))%>%
                formatStyle(
                   0,
                   target='row',
