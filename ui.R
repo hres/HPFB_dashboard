@@ -42,6 +42,8 @@ ui<-tagList(
                                        input.selectdir=='Medical Devices'",
                             
                             column(12,
+                                   br(),
+                                   br(),
                                    h4('Non Cost Recovery and Workload Performance'),
                                    DT::dataTableOutput('table_output2'))
                         )

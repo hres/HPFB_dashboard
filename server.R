@@ -18,20 +18,40 @@ return(tb)
 shinyServer(function(input, output) {
 
    table_data<-reactive({
-  
-     if(input$selectdir=='Food') ds<-food%>%clean_table()
-     
-     if(input$selectdir=='Medical Devices') ds<-med_device%>%clean_table()
-     
-     if(input$selectdir=='NHP') ds<-nhp%>%clean_table()
-     
-     if(input$selectdir=='TPD')  ds<-tpd%>%clean_table()
       
-     if(input$selectdir=='MHPD') ds<-mhpd%>%clean_table()
+     ds<-list(length=2)
+  
+     if(input$selectdir=='Food') {
+        ds[[1]]<-food%>%clean_table()
+        ds[[2]]<-NULL
+     }
      
-     if(input$selectdir=='BGTD') ds<-bgtd%>%clean_table()
+     if(input$selectdir=='Medical Devices') {
+        ds[[1]]<-med_device%>%clean_table()
+        ds[[2]]<-med_device_ncr
+     }
      
-     if(input$selectdir=='VDD') ds<-vet%>%clean_table()
+     if(input$selectdir=='NHP') {
+        ds[[1]]<-nhp%>%clean_table()
+        ds[[2]]<-NULL
+     }
+     
+     if(input$selectdir=='TPD')  {
+        ds[[1]]<-tpd%>%clean_table()
+        ds[[2]]<-NULL
+     }
+      
+     if(input$selectdir=='MHPD') {
+        ds[[1]]<-mhpd%>%clean_table()
+        ds[[2]]<-NULL
+     }
+     
+     if(input$selectdir=='BGTD') {
+        ds[[1]]<-bgtd%>%clean_table()
+        ds[[2]]<-bgtd_ncr
+     }
+     
+     if(input$selectdir=='VDD') ds[[1]]<-vet%>%clean_table()
      
      return(ds)
      
@@ -51,7 +71,7 @@ shinyServer(function(input, output) {
    
    output$table_output<-renderDataTable({
      
-      table<-table_data()
+      table<-table_data()[[1]]
       
       if(input$selectdir=='MHPD'){
          
@@ -95,6 +115,15 @@ shinyServer(function(input, output) {
       
       
      
+   })
+   
+   
+   
+   output$table_output2<-renderDataTable({
+      
+      table<-table_data()[[2]]
+      
+      DT::datatable(table,rownames=F)
    })
    
    
