@@ -33,7 +33,18 @@ ui<-tagList(
                     fluidRow(
                         column(12,
                                uiOutput('table_title'),
-                               DT::dataTableOutput('table_output'))
+                               h4('Cost Recovery Performance'),
+                               DT::dataTableOutput('table_output')),
+                        
+                        conditionalPanel(
+                            condition="input.selectdir=='TPD' ||
+                                       input.selectdir=='BGTD' ||
+                                       input.selectdir=='Medical Devices'",
+                            
+                            column(12,
+                                   h4('Non Cost Recovery and Workload Performance'),
+                                   DT::dataTableOutput('table_output2'))
+                        )
                     ))
             
             )

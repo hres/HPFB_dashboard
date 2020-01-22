@@ -6,7 +6,7 @@ clean_table<-function(tb){
   if(class(tb$YTD)!='numeric'){
   tb$YTD<-percent(as.numeric(tb$YTD),na.rm=T)
 }else{
-  tb$YTD<-percent(tb$YTD)
+  tb$YTD<-percent(tb$YTD,na.rm=T)
 }
 
 return(tb)
