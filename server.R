@@ -2,9 +2,9 @@
 #function to transform and standarize tables
 clean_table<-function(tb){
   tb[tb=='No data']<-NA
-  
+
   if(class(tb$YTD)!='numeric'){
-  tb$YTD<-percent(as.numeric(ds$YTD))
+  tb$YTD<-percent(as.numeric(tb$YTD),na.rm=T)
 }else{
   tb$YTD<-percent(tb$YTD)
 }
@@ -33,6 +33,8 @@ shinyServer(function(input, output) {
      
      if(input$selectdir=='VDD') ds<-vet%>%clean_table()
      
+     return(ds)
+     
    })
    
    output$table_title<-renderUI({
@@ -53,25 +55,41 @@ shinyServer(function(input, output) {
       
       if(input$selectdir=='MHPD'){
          
-         DT::datatable(table)%>%formatStyle(
-            'Current.month',
-            backgroundColor = styleEqual(c(1,2),c('Red','Green'))%>%
+         output<-DT::datatable(table,rownames=FALSE)%>%
                formatStyle(
                   0,
                   target='row',
                   fontWeight=styleEqual(c(1,6,10),c('bold','bold','bold'))
+               )%>%
+               formatStyle(
+                  'Current.month',
+                  backgroundColor = styleEqual(c(1,2),c('Red','Green'))
                )
-         ) 
+         
          
          
       }else{
          
-        DT::datatable(table)%>%formatStyle(
-           'Current.month',
-           backgroundColor = styleEqual(c(1,2),c('Red','Green'))
-        ) 
-         
+        output<-DT::datatable(table,rownames=F)%>%
+            formatStyle(
+          'Current.month',
+           backgroundColor = styleEqual(c(0,2),c('Red','Green'))
+        )
+           
       }
+      
+      
+      if(any(grepl('load',colnames(table)))){
+         
+         output%>%
+         formatStyle(
+            'load',
+            backgroundColor = styleEqual(c(1,2),c('Red','Green'))
+         )
+      }else{
+         output
+      }
+      
       
      
    })

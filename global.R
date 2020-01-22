@@ -12,7 +12,7 @@ library(scales)
 library(lubridate)
 library(purrr)
 library(DT)
-library(data.table)
+
 
 #load data:
 options(digits=3)
