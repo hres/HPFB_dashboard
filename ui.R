@@ -28,7 +28,19 @@ ui<-tagList(
             ),
             
             tabItems(
-            tabItem(tabName='branch'),
+            tabItem(tabName='branch',
+                    
+                    tabsetPanel(
+                        tabPanel(title='Time Tracking',value='time_track',
+                                 fluidRow(
+                                     column(12,dataTableOutput('time_track_tb'))
+                                 )),
+                        tabPanel(title='Access to Information',value='access_info'),
+                        tabPanel(title='Revenue'),
+                        tabPanel(title='Volume Indicators')
+                    )
+                    
+                    ),
             tabItem(tabName='directorate',
                     fluidRow(
                         column(12,

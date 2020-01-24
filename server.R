@@ -127,5 +127,17 @@ shinyServer(function(input, output) {
    })
    
    
+   output$time_track_tb<-renderDataTable({
+     
+     DT::datatable(time_track,rownames=F)%>%
+         formatCurrency('Outstanding.$')%>%
+         formatPercentage('Compliance')%>%
+         formatStyle(
+         c(2:13),
+         backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+       )
+   })
+   
+   
    
 })

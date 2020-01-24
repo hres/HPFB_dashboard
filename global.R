@@ -34,3 +34,5 @@ tpd_ncr<-read.xlsx('data/Operational Dashboard - pharma rx data.xlsx',sheet=1,ro
 mhpd<-read.xlsx('data/Operational Dashboard - post-market data.xlsx',sheet=1,rows=c(3:16),colNames = T)
 
 vet<-read.xlsx('data/Operational Dashboard - vet drugs data.xlsx',sheet=1,rows=c(3:11),colNames = T)
+
+time_track<-read.xlsx('data/HPFB Time Tracking for Operational Dashboard.xlsx',sheet=1,rows=c(3:13),colNames = T)
