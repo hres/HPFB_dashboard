@@ -36,8 +36,24 @@ ui<-tagList(
                                      column(12,dataTableOutput('time_track_tb'))
                                  )),
                         tabPanel(title='Access to Information',value='access_info'),
-                        tabPanel(title='Revenue'),
-                        tabPanel(title='Volume Indicators')
+                        
+                        tabPanel(title='Revenue',
+                                 fluidRow(box(title='Overall Cost Recovery',width=12,status='primary',solidHeader = T,
+                                              plotlyOutput('overall_cr')%>%withSpinner())),
+                                 
+                                  barchartUI('plot_1','Pharmaceutical Drug Evaluation','Biologic Drug Evaluation'),
+                                  barchartUI('plot_2','Medical Device Evaluation','Veterinary Drug Evaluation'),
+                                  barchartUI('plot_3','Drug Right to Sell','Medical Device Right to Sell'),
+                                  barchartUI('plot_4','Drug Master File','Certificate of Supplementary Protection')
+                                 
+                                 ),
+                        
+                        tabPanel(title='Volume Indicators',
+                                 
+                                 submissionUI('submission_1','Rx Pharma'),
+                                 submissionUI('submission_2','OTC Pharma'),
+                                 submissionUI('submission_3','Biologics'),
+                                 submissionUI('submission_4','Medical Devices'))
                     )
                     
                     ),
@@ -45,8 +61,10 @@ ui<-tagList(
                     fluidRow(
                         column(12,
                                uiOutput('table_title'),
-                               h4('Cost Recovery Performance'),
-                               DT::dataTableOutput('table_output')),
+                               box(title='Cost Recovery Performance',width=12,solidHeader=T,status='primary',
+                                   DT::dataTableOutput('table_output')
+                               )
+                              ),
                         
                         conditionalPanel(
                             condition="input.selectdir=='TPD' ||
@@ -56,9 +74,9 @@ ui<-tagList(
                             column(12,
                                    br(),
                                    br(),
-                                   h4('Non Cost Recovery and Workload Performance'),
-                                   DT::dataTableOutput('table_output2'))
-                        )
+                                   box(title='Non Cost Recovery and Workload Performance',width=12,solidHeader=T,status='primary',
+                                       DT::dataTableOutput('table_output2'))
+                        ))
                     ))
             
             )

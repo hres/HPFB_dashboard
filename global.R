@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(dashboardthemes)
+library(shinycssloaders)
 library(shinyjs)
 library(shinyWidgets)
 library(openxlsx)
@@ -12,12 +13,30 @@ library(scales)
 library(lubridate)
 library(purrr)
 library(DT)
+library(tibble)
 
+source('modules/barplot_revenue.R')
+source('modules/barplot_submission.R')
 
 #load data:
 options(digits=3)
 
+#transpose data frame
+reformat_table<-function(ds){
+  ds<-ds%>%
+    `row.names<-`(.[, 1]) %>% 
+    t() %>%
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    .[-1,] 
+  
+  ds[,]<-lapply(ds[,],as.numeric) 
+  ds$id<-rownames(ds)
+  ds$id<-factor(ds$id,levels=paste0('P',c(1:12)))
+  return(ds)
+  
+}
 
+#load data for performance tables
 bgtd<-read.xlsx('data/Operational Dashboard - biologics data.xlsx',sheet=1,rows=c(3:11),colNames=T)
 bgtd_ncr<-read.xlsx('data/Operational Dashboard - biologics data.xlsx',sheet=2,rows=c(3:14),colNames=T)
 
@@ -34,5 +53,22 @@ tpd_ncr<-read.xlsx('data/Operational Dashboard - pharma rx data.xlsx',sheet=1,ro
 mhpd<-read.xlsx('data/Operational Dashboard - post-market data.xlsx',sheet=1,rows=c(3:16),colNames = T)
 
 vet<-read.xlsx('data/Operational Dashboard - vet drugs data.xlsx',sheet=1,rows=c(3:11),colNames = T)
-
 time_track<-read.xlsx('data/HPFB Time Tracking for Operational Dashboard.xlsx',sheet=1,rows=c(3:13),colNames = T)
+
+#------------------------------------
+#load data for revenue plots
+revenue_tbs<-list()
+for (i in 1:9){
+  revenue_tbs[[i]]<-read.xlsx('data/Operational Dashboard - revenue data.xlsx',sheet=i,rows=c(1:4),cols=c(1:13),colNames = T)
+}
+
+revenue_tbs<-lapply(revenue_tbs,reformat_table)
+
+#------------------------------------
+#load data for submission volume
+
+pharma_sv<-read.xlsx('data/Operational Dashboard - pharma rx data.xlsx',sheet=3,rows=c(153:161),cols=c(1:9),colNames=T)
+bio_sv<-read.xlsx('data/Operational Dashboard - biologics data.xlsx',sheet=3,rows=c(66:74),cols=c(1:9),colNames=T)
+otc_sv<-read.xlsx('data/Operational Dashboard - pharma OTC data.xlsx',sheet=3,rows=c(59:69),cols=c(1:9),colNames=T)
+medical_sv<-read.xlsx('data/Operational Dashboard - med device data.xlsx',sheet=3,rows=c(122:132),cols=c(1:9),colNames=T)
+

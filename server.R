@@ -15,7 +15,7 @@ return(tb)
 
 
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output,session) {
 
    table_data<-reactive({
       
@@ -137,6 +137,23 @@ shinyServer(function(input, output) {
          backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
        )
    })
+   
+   output$overall_cr<-renderPlotly(
+      plot_ly(revenue_tbs[[1]],x=~id,y=~`Collections forecast`,type='bar',name='Collection forecast')%>%
+         add_trace(y=~`Collections (cumulative)`,name='Collections (cumulative)')%>%
+         add_trace(y=~Billings,name='Billings',type='scatter',mode='lines+markers')%>%
+         layout(xaxis=list(title=''),
+                yaxis=list(title='Revenue ($)')
+         )
+   )
+   
+   callModule(barchartserver,'plot_1',reactive(revenue_tbs[[2]]),reactive(revenue_tbs[[3]]))
+   callModule(barchartserver,'plot_2',reactive(revenue_tbs[[4]]),reactive(revenue_tbs[[5]]))
+   callModule(barchartserver,'plot_3',reactive(revenue_tbs[[6]]),reactive(revenue_tbs[[7]]))
+   callModule(barchartserver,'plot_4',reactive(revenue_tbs[[8]]),reactive(revenue_tbs[[9]]))
+   
+   
+   callModule(submissionserver,'submission_1',reactive(pharma_sv))
    
    
    
