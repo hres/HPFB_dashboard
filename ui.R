@@ -35,7 +35,11 @@ ui<-tagList(
                                  fluidRow(
                                      column(12,dataTableOutput('time_track_tb'))
                                  )),
-                        tabPanel(title='Access to Information',value='access_info'),
+                        
+                        tabPanel(title='Access to Information',
+                                 fluidRow(
+                                     column(12,dataTableOutput('ati_tb'))
+                                 )),
                         
                         tabPanel(title='Revenue',
                                  fluidRow(box(title='Overall Cost Recovery',width=12,status='primary',solidHeader = T,
@@ -50,13 +54,17 @@ ui<-tagList(
                         
                         tabPanel(title='Volume Indicators',
                                  
+                            fluidRow(
                                  submissionUI('submission_1','Rx Pharma'),
-                                 submissionUI('submission_2','OTC Pharma'),
+                                 submissionUI('submission_2','OTC Pharma')),
+                            fluidRow(
                                  submissionUI('submission_3','Biologics'),
                                  submissionUI('submission_4','Medical Devices'))
+                        )
                     )
                     
                     ),
+            
             tabItem(tabName='directorate',
                     fluidRow(
                         column(12,

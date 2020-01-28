@@ -138,6 +138,24 @@ shinyServer(function(input, output,session) {
        )
    })
    
+   
+   output$ati_tb<-renderDataTable({
+      
+      DT::datatable(ati,
+                    options = list(autoWidth=TRUE,columnDefs = list(list(targets = 0, visible = FALSE)),
+                                   list(targets=1,width='250px')))%>%
+         formatPercentage('YTD')%>%
+         formatStyle(
+            c(2:13),
+            backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+         )%>%
+         formatStyle(
+            0,
+            target='row',
+            fontWeight=styleEqual(c(1,4,7,10,13,16),rep('bold',6))
+         )
+   })
+   
    output$overall_cr<-renderPlotly(
       plot_ly(revenue_tbs[[1]],x=~id,y=~`Collections forecast`,type='bar',name='Collection forecast')%>%
          add_trace(y=~`Collections (cumulative)`,name='Collections (cumulative)')%>%
@@ -154,7 +172,8 @@ shinyServer(function(input, output,session) {
    
    
    callModule(submissionserver,'submission_1',reactive(pharma_sv))
-   
-   
+   callModule(submissionserver,'submission_2',reactive(bio_sv))
+   callModule(submissionserver,'submission_3',reactive(otc_sv))
+   callModule(submissionserver,'submission_4',reactive(medical_sv))
    
 })

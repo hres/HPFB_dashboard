@@ -72,3 +72,6 @@ bio_sv<-read.xlsx('data/Operational Dashboard - biologics data.xlsx',sheet=3,row
 otc_sv<-read.xlsx('data/Operational Dashboard - pharma OTC data.xlsx',sheet=3,rows=c(59:69),cols=c(1:9),colNames=T)
 medical_sv<-read.xlsx('data/Operational Dashboard - med device data.xlsx',sheet=3,rows=c(122:132),cols=c(1:9),colNames=T)
 
+#-----------------------------------
+#load data for information access:
+ati<-read.xlsx('data/Operational Dashboard - ATI.xlsx',sheet=1,rows=c(2:20),colNames=T)
