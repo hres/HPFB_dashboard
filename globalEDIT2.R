@@ -49,7 +49,7 @@ med_device_ncr<-read.xlsx('_For testing/TPD/Operational Dashboard - med device d
 
 tpd<-read.xlsx('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',sheet=1,rows=c(3:11),colNames=T)
 tpd_ncr<-read.xlsx('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',sheet=1,rows=c(3:15),colNames=T)
-  
+
 mhpd<-read.xlsx('_For testing/MHPD/Operational Dashboard - post-market data.xlsx',sheet=1,rows=c(3:16),colNames = T)
 
 vet<-read.xlsx('_For testing/VDD/Operational Dashboard - vet drugs data.xlsx',sheet=1,rows=c(3:11),colNames = T)
@@ -75,3 +75,4 @@ medical_sv<-read.xlsx('_For testing/TPD/Operational Dashboard - med device data.
 #-----------------------------------
 #load data for information access:
 ati<-read.xlsx('_For testing/RMOD/Operational Dashboard - ATI.xlsx',sheet=1,rows=c(2:20),colNames=T)
+
