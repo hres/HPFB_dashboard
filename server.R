@@ -1,12 +1,12 @@
 
 #function to transform and standarize tables
 clean_table<-function(tb){
-  tb[tb=='No data']<-NA
+   tb[tb=='No data']<-NA
 
   if(class(tb$YTD)!='numeric'){
-  tb$YTD<-percent(as.numeric(tb$YTD),na.rm=T)
+  tb$YTD<-percent(as.numeric(tb$YTD))
 }else{
-  tb$YTD<-percent(tb$YTD,na.rm=T)
+  tb$YTD<-percent(tb$YTD)
 }
 
 return(tb)
@@ -76,7 +76,7 @@ shinyServer(function(input, output,session) {
       if(input$selectdir=='MHPD'){
          
          output<-DT::datatable(table,
-             options = list(autoWidth=TRUE,dom='t',
+             options = list(autoWidth=TRUE,
                             columnDefs = list(list(targets = 0, visible = FALSE),
                                               list(targets=1,width='250px'))))%>%
                formatStyle(
@@ -93,7 +93,7 @@ shinyServer(function(input, output,session) {
          
       }else{
          
-        output<-DT::datatable(table,rownames=F,dom='t')%>%
+        output<-DT::datatable(table,rownames=F)%>%
             formatStyle(
           'Current.month',
            backgroundColor = styleEqual(c(0,2),c('Red','Green'))
