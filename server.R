@@ -76,7 +76,7 @@ shinyServer(function(input, output,session) {
       if(input$selectdir=='MHPD'){
          
          output<-DT::datatable(table,
-             options = list(autoWidth=TRUE,
+             options = list(autoWidth=TRUE,dom='t',
                             columnDefs = list(list(targets = 0, visible = FALSE),
                                               list(targets=1,width='250px'))))%>%
                formatStyle(
@@ -93,7 +93,7 @@ shinyServer(function(input, output,session) {
          
       }else{
          
-        output<-DT::datatable(table,rownames=F)%>%
+        output<-DT::datatable(table,rownames=F,dom='t')%>%
             formatStyle(
           'Current.month',
            backgroundColor = styleEqual(c(0,2),c('Red','Green'))
