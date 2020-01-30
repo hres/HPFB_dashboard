@@ -88,7 +88,8 @@ shinyServer(function(input, output,session) {
                formatStyle(
                  
                   'Current.month',
-                  backgroundColor = styleEqual(c(1,2),c('Red','Green'))
+                  backgroundColor = styleEqual(c(1,2),c('Red','Green')),
+                  color = styleEqual(c(1,2),c("black","green")),
                )
          
          
@@ -97,8 +98,11 @@ shinyServer(function(input, output,session) {
          
         output<-DT::datatable(table,rownames=F)%>%
             formatStyle(
+               color = styleEqual(c(1,2),c("black","green")),
+               
           'Current.month',
            backgroundColor = styleEqual(c(0,2),c('Red','Green'))
+          
         )
            
       }
@@ -109,7 +113,8 @@ shinyServer(function(input, output,session) {
          output%>%
          formatStyle(
             'load',
-            backgroundColor = styleEqual(c(1,2),c('Red','Green'))
+            backgroundColor = styleEqual(c(1,2),c('Red','Green')),
+            color = styleEqual(c(1,2),c("black","green")),
          )
       }else{
          output
@@ -135,7 +140,8 @@ shinyServer(function(input, output,session) {
          formatCurrency('Outstanding.$')%>%
          formatPercentage('Compliance')%>%
          formatStyle(
-         
+            
+            
          c(2:13),
          backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
        
