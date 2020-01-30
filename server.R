@@ -80,11 +80,13 @@ shinyServer(function(input, output,session) {
                             columnDefs = list(list(targets = 0, visible = FALSE),
                                               list(targets=1,width='250px'))))%>%
                formatStyle(
+                  
                   0,
                   target='row',
                   fontWeight=styleEqual(c(1,6,10),c('bold','bold','bold'))
                )%>%
                formatStyle(
+                 
                   'Current.month',
                   backgroundColor = styleEqual(c(1,2),c('Red','Green'))
                )
@@ -133,6 +135,7 @@ shinyServer(function(input, output,session) {
          formatCurrency('Outstanding.$')%>%
          formatPercentage('Compliance')%>%
          formatStyle(
+         
          c(2:13),
          backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
        
@@ -147,7 +150,7 @@ shinyServer(function(input, output,session) {
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
-            color = "green",
+            color = styleEqual(c(1,2),c("black","green")),
            
             c(2:13),
             
