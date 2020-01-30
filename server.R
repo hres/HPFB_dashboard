@@ -134,7 +134,8 @@ shinyServer(function(input, output,session) {
          formatPercentage('Compliance')%>%
          formatStyle(
          c(2:13),
-         backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+         backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
+       
        )
    })
    
@@ -146,14 +147,20 @@ shinyServer(function(input, output,session) {
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
+            color = "green",
+           
             c(2:13),
+            
             backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+         
+           
          )%>%
          formatStyle(
             0,
             target='row',
             fontWeight=styleEqual(c(1,4,7,10,13,16),rep('bold',6))
          )
+    
    })
    
    output$overall_cr<-renderPlotly(
