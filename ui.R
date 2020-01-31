@@ -16,7 +16,10 @@ ui<-tagList(
                 
                              selectInput('selectdir',label=div(style="color:white;","Select a directorate"),
                                          choices=c('Food','Medical Devices','NHP','TPD','MHPD','BGTD','VDD'))
-                         )
+                         ),
+                         
+                         menuItem('Historical Comparison',tabName='history'),
+                         menuItem('PIPs',tabName='pips')
                                      
                          )
         ),
@@ -75,8 +78,7 @@ ui<-tagList(
                               ),
                         
                         conditionalPanel(
-                            condition="input.selectdir=='TPD' ||
-                                       input.selectdir=='BGTD' ||
+                            condition="input.selectdir=='BGTD' ||
                                        input.selectdir=='Medical Devices'",
                             
                             column(12,
