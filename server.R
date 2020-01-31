@@ -80,13 +80,16 @@ shinyServer(function(input, output,session) {
                             columnDefs = list(list(targets = 0, visible = FALSE),
                                               list(targets=1,width='250px'))))%>%
                formatStyle(
+                  
                   0,
                   target='row',
                   fontWeight=styleEqual(c(1,6,10),c('bold','bold','bold'))
                )%>%
                formatStyle(
+                 
                   'Current.month',
-                  backgroundColor = styleEqual(c(1,2),c('Red','Green'))
+                  backgroundColor = styleEqual(c(1,2),c('Red','Green')),
+                  color = styleEqual(c(1,2),c("black","green")),
                )
          
          
@@ -95,8 +98,11 @@ shinyServer(function(input, output,session) {
          
         output<-DT::datatable(table,rownames=F)%>%
             formatStyle(
+               color = styleEqual(c(1,2),c("black","green")),
+               
           'Current.month',
            backgroundColor = styleEqual(c(0,2),c('Red','Green'))
+          
         )
            
       }
@@ -107,7 +113,8 @@ shinyServer(function(input, output,session) {
          output%>%
          formatStyle(
             'load',
-            backgroundColor = styleEqual(c(1,2),c('Red','Green'))
+            backgroundColor = styleEqual(c(1,2),c('Red','Green')),
+            color = styleEqual(c(1,2),c("black","green")),
          )
       }else{
          output
@@ -133,8 +140,11 @@ shinyServer(function(input, output,session) {
          formatCurrency('Outstanding.$')%>%
          formatPercentage('Compliance')%>%
          formatStyle(
+            
+            
          c(2:13),
-         backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+         backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
+       
        )
    })
    
@@ -146,14 +156,20 @@ shinyServer(function(input, output,session) {
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
+            color = styleEqual(c(1,2),c("black","green")),
+           
             c(2:13),
+            
             backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+         
+           
          )%>%
          formatStyle(
             0,
             target='row',
             fontWeight=styleEqual(c(1,4,7,10,13,16),rep('bold',6))
          )
+    
    })
    
    output$overall_cr<-renderPlotly(
