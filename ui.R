@@ -11,14 +11,15 @@ ui<-tagList(
                          menuItem('Branch metrics',tabName='branch'),
                          menuItem('Directorate metrics',tabName='directorate'),
                          
+                         menuItem('Historical Comparison',tabName='history'),
+                         
                          conditionalPanel(
-                             condition="input.sidebar=='directorate' ",
-                
+                             condition="input.sidebar=='directorate' | input.sidebar=='history' ",
+                             
                              selectInput('selectdir',label=div(style="color:white;","Select a directorate"),
                                          choices=c('Food','Medical Devices','NHP','TPD','MHPD','BGTD','VDD'))
                          ),
                          
-                         menuItem('Historical Comparison',tabName='history'),
                          menuItem('PIPs',tabName='pips')
                                      
                          )
@@ -78,7 +79,7 @@ ui<-tagList(
                               ),
                         
                         conditionalPanel(
-                            condition="input.selectdir=='BGTD' ||
+                            condition="input.selectdir=='BGTD' |
                                        input.selectdir=='Medical Devices'",
                             
                             column(12,
@@ -87,6 +88,16 @@ ui<-tagList(
                                    box(title='Non Cost Recovery and Workload Performance',width=12,solidHeader=T,status='primary',
                                        DT::dataTableOutput('table_output2'))
                         ))
+                    )),
+            
+            tabItem(tabName='history',
+                    fluidRow(
+                        column(12,
+                               uiOutput('historic_table_title'),
+                               box(title='Historical Cost Recovery Performance',width=12,solidHeader=T,status='primary',
+                                   DT::dataTableOutput('historical_table_output')
+                               )
+                        )
                     ))
             
             )

@@ -57,17 +57,24 @@ shinyServer(function(input, output,session) {
      
    })
    
-   output$table_title<-renderUI({
+   titles<-reactive(
       
-      title<-data.frame(title=c('Pre-Market - Food','Pre-Market - Medical Devices','Pre-Market - Natural Health Products',
-                                'Pre-Market - Prescription Pharmaceuticals',
-                                'Post-Market - Marketed Health Products',
-                                'Pre-Market - Biologics',
-                                'Pre-Market - Veterinary Drugs'),
-                        input=c('Food','Medical Devices','NHP','TPD','MHPD','BGTD','VDD'))
-      
-      tags$h3(title$title[title$input==input$selectdir])
-   })
+      data.frame(title=c('Pre-Market - Food','Pre-Market - Medical Devices','Pre-Market - Natural Health Products',
+                         'Pre-Market - Prescription Pharmaceuticals',
+                         'Post-Market - Marketed Health Products',
+                         'Pre-Market - Biologics',
+                         'Pre-Market - Veterinary Drugs'),
+                 input=c('Food','Medical Devices','NHP','TPD','MHPD','BGTD','VDD'))
+   )
+   
+   output$table_title<-renderUI(
+      tags$h3(titles()$title[titles()$input==input$selectdir])
+   )
+   
+   
+   output$historic_table_title<-renderUI(
+      tags$h3(titles()$title[titles()$input==input$selectdir])
+   )
    
    output$table_output<-renderDataTable({
      
@@ -129,7 +136,6 @@ shinyServer(function(input, output,session) {
    output$table_output2<-renderDataTable({
       
       table<-table_data()[[2]]
-      
       DT::datatable(table,rownames=F)
    })
    
@@ -140,7 +146,6 @@ shinyServer(function(input, output,session) {
          formatCurrency('Outstanding.$')%>%
          formatPercentage('Compliance')%>%
          formatStyle(
-            
             
          c(2:13),
          backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
@@ -156,13 +161,9 @@ shinyServer(function(input, output,session) {
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
-            color = styleEqual(c(1,2),c("black","green")),
-           
             c(2:13),
-            
+            color = styleEqual(c(1,2),c("yellow","green")),
             backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
-         
-           
          )%>%
          formatStyle(
             0,

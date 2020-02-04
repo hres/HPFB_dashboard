@@ -76,3 +76,71 @@ medical_sv<-read.xlsx('_For testing/TPD/Operational Dashboard - med device data.
 #load data for information access:
 ati<-read.xlsx('_For testing/RMOD/Operational Dashboard - ATI.xlsx',sheet=1,rows=c(2:20),colNames=T)
 
+
+
+#-----------------------------------
+#load data for historical data
+
+#function to load excel tables
+transform_tb<-function(filepath,sheetName,row_start,row_end,levels,level_1,level_2,colN=T){
+  
+  col1<-enquo(level_1)
+  col2<-enquo(level_2)
+  
+  ds<-read.xlsx(filepath,sheet=sheetName,
+                rows=c(row_start:row_end),colNames=colN)
+  
+  
+  colnames(ds)[1:2]<-c('category','X')
+  col_selection<-c('category','X','YTD','Current month','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar')
+  ds<-ds[,grepl(paste(paste0(col_selection,'$'),collapse='|'),colnames(ds))]
+  
+  ds<-ds%>%
+    filter(X %in% levels)%>%
+    mutate(category=ifelse(is.na(category),lag(category),category))%>%
+    gather(month,count,-category,-X)%>%
+    spread(X,count)%>%
+    mutate(percent=!!col1/!!col2)
+  
+  return(ds)
+  
+}
+
+#function to clean historical data for plotting
+clean_ds_forplot<-function(ds){
+  
+  ds%>%
+    mutate(percent_cat=case_when(percent<0.8 ~'low',
+                                 between(percent,0.8,0.9)~'mid',
+                                 percent>0.9 ~ 'high'))%>%
+    filter(!month %in% c('YTD','Current.month'))%>%
+    mutate(month=factor(month,levels=c('Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar')))
+  
+}
+  
+
+#tpd (only tpd provide data on non-cr performance and workload overtime)
+tpd_cr<-transform_tb('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',3,4,44,levels=c('On time','Total'),`On time`,Total)
+tpd_ncr<-transform_tb('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',3,47,80,levels=c('On time','Total'),`On time`,Total)
+
+
+#bgtd (#bgtd not providing previous month data, need to store and bind monthly data)
+bgtd_cr<-transform_tb('_For testing/BGTD/Operational Dashboard - biologics data.xlsx',3,1,17,levels=c('On time','Total'),`On time`,Total)
+bgtd_ncr<-read.xlsx('_For testing/BGTD/Operational Dashboard - biologics data.xlsx',3,rows=c(19:28),cols=c(1:3),colNames=T)
+
+#medical device
+md_cr<-transform_tb('_For testing/TPD/Operational Dashboard - med device data.xlsx',3,1,27,levels=c('On time','Total'),`On time`,Total)
+md_ncr<-transform_tb('_For testing/TPD/Operational Dashboard - med device data.xlsx',3,31,58,levels=c('On time','Total'),`On time`,Total)
+
+#food (#food not providing previous month data, need to store and bind monthly data)
+food_cr<-transform_tb('_For testing/FOOD/Operational Dashboard - food data.xlsx',2,1,11,levels=c('On time','Total'),`On time`,Total)
+
+#vdd (#vdd not providing previous month data, need to store and bind monthly data)
+vdd_cr<-transform_tb('_For testing/VDD/Operational Dashboard - vet drugs data.xlsx',2,1,17,levels=c('On time','Total'),`On time`,Total)
+
+#nhp (#nhp not providing previous month data, need to store and bind monthly data)
+nhp_cr<-transform_tb('_For testing/NNHPD/Operational Dashboard - NHP data.xlsx',2,1,13,levels=c('On time','Total'),`On time`,Total)
+
+
+
+
