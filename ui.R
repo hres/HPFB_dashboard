@@ -3,7 +3,7 @@ ui<-tagList(
     
     dashboardPage(
         
-        dashboardHeader(title='HPFB Performance Metric Dashboard'),
+        dashboardHeader(title='HPFB Performance Metric Dashboard',titleWidth = '500px'),
         
         dashboardSidebar(width=200,
                          sidebarMenu(id='sidebar',
@@ -30,6 +30,14 @@ ui<-tagList(
             shinyDashboardThemes(
                 theme = "poor_mans_flatly"
             ),
+            
+            
+            tags$head(tags$style(HTML('
+      .main-header .logo {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 20px;
+      }'))),
             
             tabItems(
             tabItem(tabName='branch',
@@ -73,19 +81,20 @@ ui<-tagList(
                     fluidRow(
                         column(12,
                                uiOutput('table_title'),
-                               box(title='Cost Recovery Performance',width=12,solidHeader=T,status='primary',
+                               box(title='Non Cost Recovery Performance',width=12,solidHeader=T,status='primary',
                                    DT::dataTableOutput('table_output')
                                )
                               ),
                         
                         conditionalPanel(
                             condition="input.selectdir=='BGTD' |
-                                       input.selectdir=='Medical Devices'",
+                                       input.selectdir=='Medical Devices'|
+                                       input.selectdir=='TPD'",
                             
                             column(12,
                                    br(),
                                    br(),
-                                   box(title='Non Cost Recovery and Workload Performance',width=12,solidHeader=T,status='primary',
+                                   box(title='Cost Recovery Performance',width=12,solidHeader=T,status='primary',
                                        DT::dataTableOutput('table_output2'))
                         ))
                     )),
@@ -94,10 +103,21 @@ ui<-tagList(
                     fluidRow(
                         column(12,
                                uiOutput('historic_table_title'),
-                               box(title='Historical Cost Recovery Performance',width=12,solidHeader=T,status='primary',
-                                   DT::dataTableOutput('historical_table_output')
+                               box(title='Historical Non Cost Recovery Performance',width=12,solidHeader=T,status='primary',
+                                   plotlyOutput('historical_table_output')%>%withSpinner()
                                )
-                        )
+                        ),
+                        conditionalPanel(
+                            condition="input.selectdir=='Medical Devices' |
+                                       input.selectdir=='TPD'",
+                            
+                            column(12,
+                                   br(),
+                                   br(),
+                                   box(title='Historical Cost Recovery Performance',width=12,solidHeader=T,status='primary',
+                                       plotlyOutput('historical_table_output2')%>%withSpinner()
+                                       )
+                            )) 
                     ))
             
             )

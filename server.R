@@ -19,26 +19,33 @@ shinyServer(function(input, output,session) {
 
    table_data<-reactive({
       
-     ds<-list(length=2)
+     ds<-list(length=4)
   
      if(input$selectdir=='Food') {
         ds[[1]]<-food%>%clean_table()
         ds[[2]]<-NULL
+        ds[[3]]<-food_raw_ncr%>%clean_ds_forplot()
+        
      }
      
      if(input$selectdir=='Medical Devices') {
-        ds[[1]]<-med_device%>%clean_table()
-        ds[[2]]<-med_device_ncr
+        ds[[1]]<-med_device_ncr
+        ds[[2]]<-med_device%>%clean_table()
+        ds[[4]]<-md_raw_cr%>%clean_ds_forplot()
+        ds[[3]]<-md_raw_ncr%>%clean_ds_forplot()
      }
      
      if(input$selectdir=='NHP') {
         ds[[1]]<-nhp%>%clean_table()
         ds[[2]]<-NULL
+        ds[[3]]<-nhp_raw_ncr%>%clean_ds_forplot()
      }
      
      if(input$selectdir=='TPD')  {
-        ds[[1]]<-tpd%>%clean_table()
-        ds[[2]]<-NULL
+        ds[[1]]<-tpd_ncr
+        ds[[2]]<-tpd%>%clean_table()
+        ds[[4]]<-tpd_raw_cr%>%clean_ds_forplot()
+        ds[[3]]<-tpd_raw_ncr%>%clean_ds_forplot()
      }
       
      if(input$selectdir=='MHPD') {
@@ -47,15 +54,22 @@ shinyServer(function(input, output,session) {
      }
      
      if(input$selectdir=='BGTD') {
-        ds[[1]]<-bgtd%>%clean_table()
-        ds[[2]]<-bgtd_ncr
+        ds[[1]]<-bgtd_ncr
+        ds[[2]]<-bgtd%>%clean_table()
+        ds[[4]]<-bgtd_raw_cr%>%clean_ds_forplot()
+        ds[[3]]<-NULL
      }
      
-     if(input$selectdir=='VDD') ds[[1]]<-vet%>%clean_table()
+     if(input$selectdir=='VDD') {
+        ds[[1]]<-vet%>%clean_table()
+        ds[[2]]<-NULL
+        ds[[3]]<-vdd_raw_ncr%>%clean_ds_forplot()
+     }
      
      return(ds)
      
    })
+   
    
    titles<-reactive(
       
@@ -82,49 +96,47 @@ shinyServer(function(input, output,session) {
       
       if(input$selectdir=='MHPD'){
          
-         output<-DT::datatable(table,
+         output<-DT::datatable(table,class = 'cell-border stripe',
              options = list(autoWidth=TRUE,
                             columnDefs = list(list(targets = 0, visible = FALSE),
-                                              list(targets=1,width='250px'))))%>%
+                                              list(targets=1,width='250px'),
+                                              list(targets=3,width='100px'))))%>%
                formatStyle(
-                  
                   0,
                   target='row',
                   fontWeight=styleEqual(c(1,6,10),c('bold','bold','bold'))
-               )%>%
-               formatStyle(
-                 
-                  'Current.month',
-                  backgroundColor = styleEqual(c(1,2),c('Red','Green')),
-                  color = styleEqual(c(1,2),c("black","green")),
                )
-         
          
          
       }else{
          
-        output<-DT::datatable(table,rownames=F)%>%
+        output<-DT::datatable(table,rownames=F,class = 'cell-border stripe')%>%
             formatStyle(
-               color = styleEqual(c(1,2),c("black","green")),
-               
-          'Current.month',
-           backgroundColor = styleEqual(c(0,2),c('Red','Green'))
+           c('Work.load'),
+           color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+           backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
           
         )
            
       }
       
       
-      if(any(grepl('load',colnames(table)))){
+      if(any(grepl('Current.month',colnames(table)))){
          
          output%>%
          formatStyle(
-            'load',
-            backgroundColor = styleEqual(c(1,2),c('Red','Green')),
-            color = styleEqual(c(1,2),c("black","green")),
+            'Current.month',
+            backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+            color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
          )
-      }else{
-         output
+         
+      }else if(any(grepl('Performance',colnames(table)))){
+         output%>%
+            formatStyle(
+               'Performance',
+               backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+               color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
+            )
       }
       
       
@@ -136,19 +148,25 @@ shinyServer(function(input, output,session) {
    output$table_output2<-renderDataTable({
       
       table<-table_data()[[2]]
-      DT::datatable(table,rownames=F)
+      DT::datatable(table,rownames=F,class = 'cell-border stripe')%>%
+          formatStyle(
+          c('Current.month'),
+          backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+          color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
+          )
    })
    
    
    output$time_track_tb<-renderDataTable({
      
-     DT::datatable(time_track,rownames=F)%>%
+     DT::datatable(time_track,rownames=F,class = 'cell-border stripe')%>%
          formatCurrency('Outstanding.$')%>%
          formatPercentage('Compliance')%>%
          formatStyle(
             
          c(2:13),
-         backgroundColor = styleEqual(c(1,2),c('Yellow','Green')),
+         backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+         color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
        
        )
    })
@@ -156,14 +174,14 @@ shinyServer(function(input, output,session) {
    
    output$ati_tb<-renderDataTable({
       
-      DT::datatable(ati,
+      DT::datatable(ati,class = 'cell-border stripe',
                     options = list(autoWidth=TRUE,columnDefs = list(list(targets = 0, visible = FALSE)),
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
             c(2:13),
-            color = styleEqual(c(1,2),c("yellow","green")),
-            backgroundColor = styleEqual(c(1,2),c('Yellow','Green'))
+            color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+            backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
          )%>%
          formatStyle(
             0,
@@ -173,6 +191,7 @@ shinyServer(function(input, output,session) {
     
    })
    
+   
    output$overall_cr<-renderPlotly(
       plot_ly(revenue_tbs[[1]],x=~id,y=~`Collections forecast`,type='bar',name='Collection forecast')%>%
          add_trace(y=~`Collections (cumulative)`,name='Collections (cumulative)')%>%
@@ -181,6 +200,7 @@ shinyServer(function(input, output,session) {
                 yaxis=list(title='Revenue ($)')
          )
    )
+   
    
    callModule(barchartserver,'plot_1',reactive(revenue_tbs[[2]]),reactive(revenue_tbs[[3]]))
    callModule(barchartserver,'plot_2',reactive(revenue_tbs[[4]]),reactive(revenue_tbs[[5]]))
@@ -192,5 +212,47 @@ shinyServer(function(input, output,session) {
    callModule(submissionserver,'submission_2',reactive(bio_sv))
    callModule(submissionserver,'submission_3',reactive(otc_sv))
    callModule(submissionserver,'submission_4',reactive(medical_sv))
+   
+   
+   # tab for historical data
+   
+   output$historical_table_output<-renderPlotly({
+      
+      data<-table_data()[[3]]
+      
+      color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
+      
+      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+         geom_tile(color='grey')+
+         scale_fill_manual(values=color,na.value='grey90')+
+         theme_minimal(base_size=15)+
+         theme(legend.position='none',
+               axis.ticks=element_blank(),
+               axis.text.x=element_text(colour='grey50'))+
+         labs(x='',y='')
+      
+      ggplotly(p)
+      
+   })
+   
+   
+   output$historical_table_output2<-renderPlotly({
+      
+      data<-table_data()[[4]]
+      
+      color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
+      
+      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+         geom_tile(color='grey')+
+         scale_fill_manual(values=color,na.value='grey90')+
+         theme_minimal(base_size=15)+
+         theme(legend.position='none',
+               axis.ticks=element_blank(),
+               axis.text.x=element_text(colour='grey50'))+
+         labs(x='',y='')
+      
+      ggplotly(p)
+      
+   })
    
 })
