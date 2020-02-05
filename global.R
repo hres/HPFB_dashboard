@@ -15,6 +15,10 @@ library(purrr)
 library(DT)
 library(tibble)
 
+#set parameter for modules/barplot_submission
+current_report_month<-12
+
+
 source('modules/barplot_revenue.R')
 source('modules/barplot_submission.R')
 
@@ -51,6 +55,8 @@ tpd<-read.xlsx('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',sh
 tpd_ncr<-read.xlsx('_For testing/TPD/Operational Dashboard - pharma rx data.xlsx',sheet=2,rows=c(3:15),colNames=T)
 
 mhpd<-read.xlsx('_For testing/MHPD/Operational Dashboard - post-market data.xlsx',sheet=1,rows=c(3:16),colNames = T)
+mhpd_risk<-read.xlsx('_For testing/MHPD/Operational Dashboard - post-market data.xlsx',sheet='Risk outcomes',rows=c(1:7),colNames = T)
+mhpd_safety<-read.xlsx('_For testing/MHPD/Operational Dashboard - post-market data.xlsx',sheet='Risk outcomes',startRow=10,colNames = T)
 
 vet<-read.xlsx('_For testing/VDD/Operational Dashboard - vet drugs data.xlsx',sheet=1,rows=c(3:11),colNames = T)
 time_track<-read.xlsx('_For testing/Branch Tables - DO NOT EDIT/HPFB Time Tracking for Operational Dashboard.xlsx',sheet=1,rows=c(3:13),colNames = T)

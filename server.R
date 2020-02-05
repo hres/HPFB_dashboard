@@ -16,6 +16,11 @@ return(tb)
 
 
 shinyServer(function(input, output,session) {
+   
+   
+   #set global options for datatables:
+   options(DT.options = list(pageLength=15, language = list(search = 'Filter:')))
+   
 
    table_data<-reactive({
       
@@ -110,7 +115,8 @@ shinyServer(function(input, output,session) {
          
       }else{
          
-        output<-DT::datatable(table,rownames=F,class = 'cell-border stripe')%>%
+        output<-DT::datatable(table,rownames=F,
+                              class = 'cell-border stripe')%>%
             formatStyle(
            c('Work.load'),
            color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
@@ -148,12 +154,28 @@ shinyServer(function(input, output,session) {
    output$table_output2<-renderDataTable({
       
       table<-table_data()[[2]]
-      DT::datatable(table,rownames=F,class = 'cell-border stripe')%>%
+      DT::datatable(table,rownames=F,
+                    class = 'cell-border stripe')%>%
           formatStyle(
           c('Current.month'),
           backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
           color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
           )
+   })
+   
+   
+   output$table_output3<-renderTable({
+      
+      mhpd_risk
+      
+   })
+   
+   output$table_output4<-renderTable({
+      
+      shiny::validate(
+              need(nrow(mhpd_safety)>0,'No Summary Safety Reviews were published'))
+      
+      mhpd_safety
    })
    
    
@@ -175,7 +197,8 @@ shinyServer(function(input, output,session) {
    output$ati_tb<-renderDataTable({
       
       DT::datatable(ati,class = 'cell-border stripe',
-                    options = list(autoWidth=TRUE,columnDefs = list(list(targets = 0, visible = FALSE)),
+                    options = list(autoWidth=TRUE,
+                                   columnDefs = list(list(targets = 0, visible = FALSE)),
                                    list(targets=1,width='250px')))%>%
          formatPercentage('YTD')%>%
          formatStyle(
@@ -209,8 +232,8 @@ shinyServer(function(input, output,session) {
    
    
    callModule(submissionserver,'submission_1',reactive(pharma_sv))
-   callModule(submissionserver,'submission_2',reactive(bio_sv))
-   callModule(submissionserver,'submission_3',reactive(otc_sv))
+   callModule(submissionserver,'submission_2',reactive(otc_sv))
+   callModule(submissionserver,'submission_3',reactive(bio_sv))
    callModule(submissionserver,'submission_4',reactive(medical_sv))
    
    

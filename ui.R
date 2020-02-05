@@ -96,7 +96,19 @@ ui<-tagList(
                                    br(),
                                    box(title='Cost Recovery Performance',width=12,solidHeader=T,status='primary',
                                        DT::dataTableOutput('table_output2'))
-                        ))
+                        )),
+                        
+                        conditionalPanel(
+                          condition="input.selectdir=='MHPD'",
+                          
+                          column(12,
+                                 br(),
+                                 br(),
+                                 box(title='Risk Outcomes / Summary Safety Review',width=12,solidHeader=T,status='primary',
+                                     tableOutput('table_output3'),
+                                     tableOutput('table_output4'))
+                          ))
+                        
                     )),
             
             tabItem(tabName='history',
