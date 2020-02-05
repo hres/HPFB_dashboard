@@ -13,7 +13,6 @@ library(scales)
 library(lubridate)
 library(purrr)
 library(DT)
-library(tibble)
 
 #set parameter for modules/barplot_submission
 current_report_month<-12
