@@ -239,13 +239,30 @@ shinyServer(function(input, output,session) {
    
    # tab for historical data
    
-   output$historical_table_output<-renderPlotly({
-      
-      data<-table_data()[[3]]
+   output$historical_table_output<-renderPlot({
       
       color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
       
-      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+      if(input$selectdir=='MHPD'){
+      
+      data<-mhpd_cr%>%clean_ds_forplot()
+         
+      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+            geom_tile(color='grey')+
+            scale_fill_manual(values=color,na.value='grey90')+
+            theme_minimal(base_size=15)+
+            theme(legend.position='none',
+                  axis.ticks=element_blank(),
+                  axis.text.x=element_text(colour='grey50'))+
+            labs(x='',y='')+
+            facet_col(vars(cat2),scales='free_y',space='free')
+            
+         
+      }else{
+      
+      data<-table_data()[[3]]
+      
+      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
          geom_tile(color='grey')+
          scale_fill_manual(values=color,na.value='grey90')+
          theme_minimal(base_size=15)+
@@ -254,18 +271,18 @@ shinyServer(function(input, output,session) {
                axis.text.x=element_text(colour='grey50'))+
          labs(x='',y='')
       
-      ggplotly(p)
+      }
       
    })
    
    
-   output$historical_table_output2<-renderPlotly({
+   output$historical_table_output2<-renderPlot({
       
       data<-table_data()[[4]]
       
       color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
       
-      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
          geom_tile(color='grey')+
          scale_fill_manual(values=color,na.value='grey90')+
          theme_minimal(base_size=15)+
@@ -274,7 +291,7 @@ shinyServer(function(input, output,session) {
                axis.text.x=element_text(colour='grey50'))+
          labs(x='',y='')
       
-      ggplotly(p)
+      
       
    })
    

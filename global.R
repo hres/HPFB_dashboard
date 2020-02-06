@@ -8,6 +8,7 @@ library(openxlsx)
 library(dplyr)
 library(plotly)
 library(ggplot2)
+library(ggforce)
 library(tidyr)
 library(scales)
 library(lubridate)
@@ -97,8 +98,11 @@ transform_tb<-function(filepath,sheetName,row_start,row_end,levels,level_1,level
   
   
   colnames(ds)[1:2]<-c('category','X')
+  
+  if(colN){
   col_selection<-c('category','X','YTD','Current month','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar')
   ds<-ds[,grepl(paste(paste0(col_selection,'$'),collapse='|'),colnames(ds))]
+  }
   
   ds<-ds%>%
     filter(X %in% levels)%>%
@@ -148,6 +152,27 @@ vdd_raw_ncr<-transform_tb('_For testing/VDD/Operational Dashboard - vet drugs da
 #nhp (#nhp not providing previous month data, need to store and bind monthly data)
 nhp_raw_ncr<-transform_tb('_For testing/NNHPD/Operational Dashboard - NHP data.xlsx',2,1,13,levels=c('On time','Total'),`On time`,Total)
 
+#mhpd (only has non-CR performance data)
+#need to read table by chunks as there are redundancy in categories
+starts<-c(4,13,20,27,30,33,37,40,42,44,46)
+ends<- c(11,18,25,28,31,36,38,41,43,45,47)
+subtitles<-c('Signal & Regulatory Assessment','Periodic Safety Update Reports','Risk Management Plans','Adverse Reaxtion Reports',
+             'Medical Device Mandatory Problem Reports','Case Safety Reviews','Product Focus Monitoring','Summary Safety Reviews',
+             'Advertising Complaints','Health Product Risk Comms','Info Watch')
 
+month_level<-data.frame(name=paste0('X',seq(1,13,1)),
+                        label=c('YTD','Current month','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'))
+mhpd_cr<-list()
+
+for ( i in seq_along(starts)){
+  mhpd_cr[[i]]<-transform_tb('_For testing/MHPD/Operational Dashboard - post-market data.xlsx',3,starts[i],ends[i],
+                             levels=c('On time','Total'),`On time`,Total,colN=F)
+  
+  mhpd_cr[[i]]$month<-month_level$label[match(mhpd_cr[[i]]$month,month_level$name)]
+  mhpd_cr[[i]]$cat2<-subtitles[i]
+}
+
+#combine table to single table:
+mhpd_cr<-do.call(rbind,mhpd_cr)
 
 
