@@ -112,8 +112,8 @@ ui<-tagList(
                     )),
             
             tabItem(tabName='history',
-                    fluidRow(
-                        column(12,
+                    fluidRow(  
+                          column(12,
                                uiOutput('historic_table_title'),
                                box(title='Historical Non Cost Recovery Performance',width=12,solidHeader=T,status='primary',
                                    plotOutput('historical_table_output')%>%withSpinner()

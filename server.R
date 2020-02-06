@@ -239,6 +239,19 @@ shinyServer(function(input, output,session) {
    
    # tab for historical data
    
+   heightcontrol<-function(){
+      
+      if(input$selectdir=='MHPD'){
+         
+         height=800
+      }else{
+         height=400
+      }
+      
+      return(height)
+   }
+   
+   
    output$historical_table_output<-renderPlot({
       
       color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
@@ -273,7 +286,7 @@ shinyServer(function(input, output,session) {
       
       }
       
-   })
+   },height=heightcontrol)
    
    
    output$historical_table_output2<-renderPlot({
@@ -290,9 +303,6 @@ shinyServer(function(input, output,session) {
                axis.ticks=element_blank(),
                axis.text.x=element_text(colour='grey50'))+
          labs(x='',y='')
-      
-      
-      
    })
    
 })
