@@ -21,7 +21,6 @@ ui<-tagList(
                          ),
                          
                          menuItem('PIPs',tabName='pips')
-                                     
                          )
         ),
         
@@ -45,12 +44,15 @@ ui<-tagList(
                     tabsetPanel(
                         tabPanel(title='Time Tracking',value='time_track',
                                  fluidRow(
-                                     column(12,dataTableOutput('time_track_tb'))
+                                     column(12,
+                                            dataTableOutput('time_track_tb'),
+                                            HTML('<b>Metrics:</b> 95%+ green, 85-95% yellow, <85% red' ))
                                  )),
                         
                         tabPanel(title='Access to Information',
                                  fluidRow(
-                                     column(12,dataTableOutput('ati_tb'))
+                                     column(12,dataTableOutput('ati_tb'),
+                                            HTML('<b>Metrics:</b> 95%+ green, 85-95% yellow, <85% red' ))
                                  )),
                         
                         tabPanel(title='Revenue',
@@ -82,7 +84,11 @@ ui<-tagList(
                         column(12,
                                uiOutput('table_title'),
                                box(title='Non Cost Recovery Performance',width=12,solidHeader=T,status='primary',
-                                   DT::dataTableOutput('table_output')
+                                   DT::dataTableOutput('table_output'),
+                                   tags$b('Measurement criteria:'),
+                                   br(),
+                                   HTML('Performance within target: 90%+ green, 80-89% yellow, <80% red <br>
+                                         Workload: 0-10% in backlog green, 11-20% yellow, >20% red')
                                )
                               ),
                         
@@ -95,7 +101,8 @@ ui<-tagList(
                                    br(),
                                    br(),
                                    box(title='Cost Recovery Performance',width=12,solidHeader=T,status='primary',
-                                       DT::dataTableOutput('table_output2'))
+                                       DT::dataTableOutput('table_output2')
+                                       )
                         )),
                         
                         conditionalPanel(

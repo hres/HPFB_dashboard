@@ -258,7 +258,7 @@ shinyServer(function(input, output,session) {
       
       if(input$selectdir=='MHPD'){
       
-      data<-mhpd_cr%>%clean_ds_forplot()
+      data<-mhpd_cal%>%clean_ds_forplot()
          
       ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
             geom_tile(color='grey')+
