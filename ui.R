@@ -123,7 +123,7 @@ ui<-tagList(
                           column(12,
                                uiOutput('historic_table_title'),
                                box(title='Historical Non Cost Recovery Performance',width=12,solidHeader=T,status='primary',
-                                   plotOutput('historical_table_output')%>%withSpinner()
+                                   uiOutput('historical_table_output_ui')
                                )
                         ),
                         conditionalPanel(
@@ -134,9 +134,9 @@ ui<-tagList(
                                    br(),
                                    br(),
                                    box(title='Historical Cost Recovery Performance',width=12,solidHeader=T,status='primary',
-                                       plotOutput('historical_table_output2')%>%withSpinner()
+                                       plotOutput('historical_table_output2',height='350px')%>%withSpinner()
                                        )
-                            )) 
+                            ))
                     ))
             
             )

@@ -104,8 +104,7 @@ shinyServer(function(input, output,session) {
          output<-DT::datatable(table,class = 'cell-border stripe',
              options = list(autoWidth=TRUE,
                             columnDefs = list(list(targets = 0, visible = FALSE),
-                                              list(targets=1,width='250px'),
-                                              list(targets=3,width='100px'))))%>%
+                                              list(targets=1,width='150px'))))%>%
                formatStyle(
                   0,
                   target='row',
@@ -239,18 +238,23 @@ shinyServer(function(input, output,session) {
    
    # tab for historical data
    
-   heightcontrol<-function(){
-      
+   heightcontrol<-reactive({
+
       if(input$selectdir=='MHPD'){
-         
-         height=800
+
+         height=600
       }else{
-         height=400
+         height=350
       }
-      
+
       return(height)
-   }
+   })
    
+   output$historical_table_output_ui<-renderUI({
+      plotOutput('historical_table_output',height=heightcontrol())%>%withSpinner()
+   })
+      
+
    
    output$historical_table_output<-renderPlot({
       
@@ -260,7 +264,7 @@ shinyServer(function(input, output,session) {
       
       data<-mhpd_cal%>%clean_ds_forplot()
          
-      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
             geom_tile(color='grey')+
             scale_fill_manual(values=color,na.value='grey90')+
             theme_minimal(base_size=15)+
@@ -275,7 +279,7 @@ shinyServer(function(input, output,session) {
       
       data<-table_data()[[3]]
       
-      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
          geom_tile(color='grey')+
          scale_fill_manual(values=color,na.value='grey90')+
          theme_minimal(base_size=15)+
@@ -286,7 +290,9 @@ shinyServer(function(input, output,session) {
       
       }
       
-   },height=heightcontrol)
+      p
+      
+   })
    
    
    output$historical_table_output2<-renderPlot({
@@ -295,7 +301,7 @@ shinyServer(function(input, output,session) {
       
       color<-c('low'='#C00000','mid'='#FFC000','high'='#00B050')
       
-      ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
+      p<-ggplot(data,aes(x=month,y=category,fill=percent_cat,label=percent(percent)))+
          geom_tile(color='grey')+
          scale_fill_manual(values=color,na.value='grey90')+
          theme_minimal(base_size=15)+
@@ -303,6 +309,8 @@ shinyServer(function(input, output,session) {
                axis.ticks=element_blank(),
                axis.text.x=element_text(colour='grey50'))+
          labs(x='',y='')
+      
+      p
    })
    
 })
