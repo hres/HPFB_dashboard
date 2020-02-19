@@ -80,8 +80,7 @@ medical_sv<-read.xlsx('_For testing/TPD/Operational Dashboard - med device data.
 
 #-----------------------------------
 #load data for information access:
-ati<-read.xlsx('_For testing/RMOD/Operational Dashboard - ATI.xlsx',sheet=1,rows=c(2:20),colNames=T)
-colnames(ati)[1]<-' ' #remove 'X1' auto-assigned colname
+ati<-read.xlsx('_For testing/RMOD/Operational Dashboard - ATI.xlsx',sheet=2,rows=c(1:43),colNames=T)
 
 
 #-----------------------------------
