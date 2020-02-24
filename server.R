@@ -152,39 +152,13 @@ shinyServer(function(input, output,session) {
    
    output$table_output2<-renderDataTable({
       
-      main_list_ati <- ati$X1[is.na(ati$X2)]
-      sub_list_ati<-ati$X1[!is.na(ati$X2)]
-      sub_list_ati<-sub_list_ati[!is.na(sub_list_ati)]
-      
-      ati_cal <- as.numeric(unlist(t(ati[grepl("On time", ati$X2),c(3:ncol(ati))])))/as.numeric(unlist(t(ati[grepl("Total", ati$X2),c(3:ncol(ati))])))
-      ati_cal <- as.data.frame(split(ati_cal, 3:ncol(ati)))
-      ati_cal$category<-sub_list_ati
-      
-      index_main_list_ati<-c(which(is.na(ati$X2)),nrow(ati)+1)
-      main_list_count_ati<-(diff(index_main_list_ati,lag=1)-3)/2
-      main_list_ati<-unlist(mapply(rep,main_list_ati,main_list_count_ati,USE.NAMES =F,simplify=TRUE))
-      ati_cal$cat2<- as.list(main_list_ati)
-      
-      ati_cal <- ati_cal[c("cat2", "category", "X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15")]
-      
-      DT::datatable(ati_cal%>% mutate_if(is.numeric, ~round(., 2)), class = 'cell-border stripe',
-                    options = list(autoWidth=TRUE,columnDefs = list(list(targets = 0, visible = FALSE)),
-                                   list(targets=1,width='250px')))  %>%
-         
-         formatPercentage(c("X3", "X4", "X5", "X6", "X7", "X8", "X9", "X10", "X11", "X12", "X13", "X14", "X15"))%>%
-         
+      table<-table_data()[[2]]
+      DT::datatable(table,rownames=F,
+                    class = 'cell-border stripe')%>%
          formatStyle(
-            color = styleEqual(c(1,0.94,0.98),c("mediumspringgreen","gold", "gold")),
-            c(3:ncol(ati_cal)),
-            myJScolor = "value == 1 ? \"mediumspringgreen\"  :isNaN(parseFloat(value)) ? \"lightskyblue\" : value",
-            #class(myJScolor) = "JS_EVAL"
-            backgroundColor = myJScolor
-         )%>%
-         formatStyle(
-            0,
-            target='row',
-            #fontWeight=styleEqual(c(1),rep('bold',1))
-            fontWeight=styleEqual(c("cat2"),rep('bold',1))
+            c('Current.month'),
+            backgroundColor = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050')),
+            color = styleEqual(c(0,1,2),c('#C00000','#FFC000','#00B050'))
          )
    })
    
